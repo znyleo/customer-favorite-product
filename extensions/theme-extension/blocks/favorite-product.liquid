@@ -1,0 +1,88 @@
+<div
+  class="customer-favorite"
+  data-customer-favorite
+  data-product-id="{{ product.id }}"
+  data-product-handle="{{ product.handle }}"
+  data-add-label="{{ block.settings.add_label | escape }}"
+  data-saved-label="{{ block.settings.saved_label | escape }}"
+  {{ block.shopify_attributes }}
+>
+  {% if customer %}
+    <button
+      type="button"
+      class="customer-favorite__button"
+      data-favorite-button
+      aria-pressed="false"
+    >
+      <span
+        class="customer-favorite__icon"
+        data-favorite-icon
+        aria-hidden="true"
+      >
+        ♡
+      </span>
+
+      <span data-favorite-label>
+        {{ block.settings.add_label }}
+      </span>
+    </button>
+
+    <p
+      class="customer-favorite__message"
+      data-favorite-message
+      aria-live="polite"
+      hidden
+    ></p>
+  {% else %}
+    <a
+      class="customer-favorite__button customer-favorite__login"
+      href="{{ routes.account_login_url }}?return_url={{ product.url | url_encode }}"
+    >
+      <span
+        class="customer-favorite__icon"
+        aria-hidden="true"
+      >
+        ♡
+      </span>
+
+      <span>{{ block.settings.login_label }}</span>
+    </a>
+  {% endif %}
+</div>
+
+{{ 'customer-favorites.css' | asset_url | stylesheet_tag }}
+
+<script
+  src="{{ 'customer-favorites.js' | asset_url }}"
+  defer="defer"
+></script>
+
+{% schema %}
+{
+  "name": "Favorite product",
+  "target": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Add button label",
+      "default": "Add to favorites"
+    },
+    {
+      "type": "text",
+      "id": "saved_label",
+      "label": "Saved button label",
+      "default": "Saved to favorites"
+    },
+    {
+      "type": "text",
+      "id": "login_label",
+      "label": "Signed-out message",
+      "default": "Sign in to save this product"
+    }
+  ]
+}
+{% endschema %}
